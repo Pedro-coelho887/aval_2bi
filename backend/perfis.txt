@@ -1,0 +1,4 @@
+id nome CPF/CNPJ nascimento contato
+1, Pedro, 450, 21-02-03, 998932152
+3, Ana, 898, 04-04-09, 612571
+4, Vitinho, 9093, 04-05-99, 3535
