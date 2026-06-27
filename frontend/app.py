@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from backend.storage import Storage
 from frontend.frames import MainFrame,NewProfileFrame,UpdateProfileFrame
+"""Classe principal do App"""
 class App:
     def __init__(self):
         self.janela = tk.Tk()
@@ -31,8 +32,10 @@ class App:
 
     def add_profile(self,campos):
         valores = [v.get() for v in campos.values()]
-        self.storage.create_profile(valores[0],valores[1],valores[2],valores[3],60810)
-        self.newprofileframe.newprofile_label.config(text="Usuário Adicionado!")
+        if self.storage.create_profile(valores[0],valores[1],valores[2],valores[3],"60810"):
+            self.newprofileframe.newprofile_label.config(text="Perfil Adicionado!")
+        else:
+            self.newprofileframe.newprofile_label.config(text="Perfil inválido. Revise as informações.")
 
     def delete_profile(self):
         selected = self.mainframe.tabela.selection()
@@ -48,8 +51,10 @@ class App:
 
     def update_profile(self,campos):
         valores = [v.get() for v in campos.values()]
-        self.storage.update_profile(self.updateprofileframe.update_id,valores[0],valores[1],valores[2],valores[3],60810)
-        self.updateprofileframe.updateprofile_label.config(text="Usuário Atualizado!")
+        if not self.storage.update_profile(self.updateprofileframe.update_id,valores):
+            self.updateprofileframe.updateprofile_label.config(text="Perfil Inválido. Revise as informações")
+        else:
+            self.updateprofileframe.updateprofile_label.config(text="Usuário Atualizado!")
 
     def run(self):
         self.mainframe.frame.grid(row=0,column=0,sticky="nsew")
@@ -59,7 +64,7 @@ class App:
         self.mainframe.build_window()
         self.newprofileframe.build_window()
         self.updateprofileframe.build_window()
-        
+
         self.open_main_window()
         self.janela.mainloop()
 
