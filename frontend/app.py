@@ -1,20 +1,22 @@
 import tkinter as tk
 from tkinter import ttk
 from backend.storage import Storage
-from frontend.frames import MainFrame,NewProfileFrame,UpdateProfileFrame
+from frontend.frames import MainFrame,FillInfoFrame
 """Classe principal do App"""
 class App:
     def __init__(self):
         self.janela = tk.Tk()
         self.janela.title("Catálogo de profissionais")
         self.mainframe = MainFrame(self.janela,self.open_newprofile_window,self.delete_profile,self.open_updateprofile_window)
-        self.newprofileframe = NewProfileFrame(self.janela,self.open_main_window,self.add_profile)
-        self.updateprofileframe = UpdateProfileFrame(self.janela,self.open_main_window,self.update_profile)
+        # self.newprofileframe = NewProfileFrame(self.janela,self.open_main_window,self.add_profile)
+        # self.updateprofileframe = UpdateProfileFrame(self.janela,self.open_main_window,self.update_profile)
+        self.newprofileframe = FillInfoFrame(self.janela,self.open_main_window,self.add_profile,"Criar Novo Perfil","Criação de Perfil")
+        self.updateprofileframe = FillInfoFrame(self.janela,self.open_main_window,self.update_profile,"Atualizar Perfil","Atualização Perfil")
         self.storage = Storage("backend/perfis.txt","backend/enderecos.txt")
 
     def open_main_window(self):
         self.storage.read_database()
-        self.mainframe.update_table(self.storage.perfil_database)
+        self.mainframe.update_table(self.storage.database)
         self.mainframe.frame.tkraise()
            
     def open_newprofile_window(self):
@@ -26,16 +28,18 @@ class App:
         if not selected:
             return
         item = selected[0]
-        valores = self.mainframe.tabela.item(item, "values")
-        self.updateprofileframe.update_window(valores)
+        id = self.mainframe.tabela.item(item, "values")[0]
+        profile = self.storage.database[id]
+        self.updateprofileframe.update_window(profile)
         self.updateprofileframe.frame.tkraise()
 
-    def add_profile(self,campos):
-        valores = [v.get() for v in campos.values()]
-        if self.storage.create_profile(valores[0],valores[1],valores[2],valores[3],"60810"):
-            self.newprofileframe.newprofile_label.config(text="Perfil Adicionado!")
+    def add_profile(self,id,personal_info,adress_info):
+        personal_values = [v.get() for v in personal_info.values()]
+        adress_values = [v.get() for v in adress_info.values()]
+        if self.storage.create_profile(personal_values,adress_values):
+            self.newprofileframe.warning_label.config(text="Perfil Adicionado!")
         else:
-            self.newprofileframe.newprofile_label.config(text="Perfil inválido. Revise as informações.")
+            self.newprofileframe.warning_label.config(text="Perfil inválido. Revise as informações.")
 
     def delete_profile(self):
         selected = self.mainframe.tabela.selection()
@@ -49,12 +53,13 @@ class App:
 
         self.mainframe.tabela.delete(item)
 
-    def update_profile(self,campos):
-        valores = [v.get() for v in campos.values()]
-        if not self.storage.update_profile(self.updateprofileframe.update_id,valores):
-            self.updateprofileframe.updateprofile_label.config(text="Perfil Inválido. Revise as informações")
+    def update_profile(self,id,personal_info,adress_info):
+        personal_values = [v.get() for v in personal_info.values()]
+        adress_values = [v.get() for v in adress_info.values()]
+        if not self.storage.update_profile(id,personal_values,adress_values):
+            self.updateprofileframe.warning_label.config(text="Perfil Inválido. Revise as informações")
         else:
-            self.updateprofileframe.updateprofile_label.config(text="Usuário Atualizado!")
+            self.updateprofileframe.warning_label.config(text="Perfil Atualizado!")
 
     def run(self):
         self.mainframe.frame.grid(row=0,column=0,sticky="nsew")

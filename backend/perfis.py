@@ -1,16 +1,23 @@
 from datetime import datetime as dt
 from validate_docbr import CPF,CNPJ
 import phonenumbers
-from phonenumbers import PhoneNumberFormat
+import requests
 """Classe que representa o Perfil"""
 class Perfil:
-    def __init__(self,id:str,nome:str,cpf_cnpj:str,nascimento:str,contato:str,CEP:str):
+    def __init__(self,id:str,personal_info,adress_info):
         self.id = id.strip()
-        self.nome = nome.strip()
-        self.cpf_cnpj = cpf_cnpj.strip()
-        self.nascimento = nascimento.strip()
-        self.contato = contato.strip()
-        self.CEP = CEP.strip()
+        self.nome = personal_info[0].strip()
+        self.cpf_cnpj = personal_info[1].strip()
+        self.nascimento = personal_info[2].strip()
+        self.contato = personal_info[3].strip()
+        
+        self.CEP = adress_info[0].replace("-","").strip()
+        self.rua = adress_info[1]
+        self.numero = adress_info[2]
+        self.complemento = adress_info[3]
+        self.bairro = adress_info[4]
+        self.cidade = adress_info[5]
+        self.UF = adress_info[6]
 
     def valid_birthdate(self):
         try:

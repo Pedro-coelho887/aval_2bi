@@ -1,1 +1,4 @@
-id rua numero complemento bairro cidade UF CEP
+id CEP rua numero complemento bairro cidade UF
+1, 60810786,          Avenida Rogaciano Leite,          240,          apt 401A,          Salinas,          Fortaleza,          CE
+2, 12227000,       Avenida Brigadeiro Faria Lima,       B,       216,       Parque Martim Cererê,       São José dos Campos,       SP
+3, 12227000,   Avenida Brigadeiro Faria Lima,   40,   216B,   Parque Martim Cererê,   São José dos Campos,   SP
