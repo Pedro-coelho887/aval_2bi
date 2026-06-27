@@ -5,7 +5,6 @@ class Storage:
         self.enderecos_database = {}
         self.perfis_filepath = perfis_filepath
         self.enderecos_filepath = enderecos_filepath
-
     def read_database(self):
         """Lê os arquivos de dados e transforma em atributos da classe"""
         with open(self.perfis_filepath) as f:
@@ -22,8 +21,6 @@ class Storage:
             endereco_parts = endereco.strip().split(",")
             self.enderecos_database[endereco_parts[0]] = endereco_parts[1:]
 
-        for perfil in self.perfil_database:
-            print(self.perfil_database[perfil])
     
     def update_database(self):
         with open(self.perfis_filepath,"w") as f:
@@ -33,7 +30,7 @@ class Storage:
 
 
     def create_profile(self,nome,cpf_cnpj,nascimento,contato,CEP):
-        id = "1" if not self.perfil_database.keys() else str(int(max(self.perfil_database.keys())) + 1)
+        id = "1" if not self.perfil_database.keys() else str(int(max(self.perfil_database.keys(),key=int)) + 1)
         self.perfil_database[id] = [nome,cpf_cnpj,nascimento,contato]
         self.update_database()
 
@@ -49,6 +46,3 @@ class Storage:
                 novos_dados[i] = self.perfil_database[id][i]
         self.perfil_database[id] = novos_dados
         self.update_database()
-
-
-        
